@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render , redirect
 from blogs.models import Category , Blog
 from assignments.models import About
 from .forms import RegistrationForm
@@ -18,7 +18,6 @@ def home(request):
         about = None
 
 
-
     context = {
         # 'categories' : categories,
         'featured_posts' : featured_post,
@@ -29,6 +28,16 @@ def home(request):
 
 
 def register(request):
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('register')
+        else:
+            print(form.errors)
+    else:
+        form  = RegistrationForm()
+
     form = RegistrationForm
     context = {
         'form': form,
